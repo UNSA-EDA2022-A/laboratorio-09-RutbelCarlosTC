@@ -1,5 +1,6 @@
 package com.example.project;
 
+import java.beans.Visibility;
 import java.util.ArrayList;
 
 public class GraphMatrix implements Graph {
@@ -78,23 +79,33 @@ public class GraphMatrix implements Graph {
     }
 
     public int countConnectedComponents() {
-
-        return -1;
+        ArrayList<Integer> vertices = new ArrayList<Integer>();
+        for(int i=0; i< numVertices; i++)
+            vertices.add(i);
+        int cont = 0;
+        while(vertices.size() > 0){
+            ArrayList<Integer> visitados = depthFirstSearch(vertices.get(0));
+            for(Integer x: visitados){
+                vertices.remove(x);
+            }
+            cont++;
+        }
+        return cont;
     }
 
     public static void main(String args[]) {
         GraphMatrix graph = new GraphMatrix(5);
+        /* 
         graph.addEdge(0, 1);
         graph.addEdge(0, 2);
         graph.addEdge(0, 3);
-        graph.addEdge(0, 4);
         graph.addEdge(1, 2);
         graph.addEdge(2, 3);
-        graph.addEdge(2, 4);
         System.out.println("The graph matrix:");
         System.out.println(graph);
-        System.out.println("DFS:");
-        System.out.println(graph.depthFirstSearch(0));
+        //System.out.println("DFS:");
+        */
+        System.out.println(graph.countConnectedComponents());
     }
 
 }
