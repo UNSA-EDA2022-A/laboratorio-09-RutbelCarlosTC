@@ -86,11 +86,44 @@ public class GraphAdjacentList implements Graph {
     }
 
     public int countConnectedComponents(){
-        return -1;
+        ArrayList<Vertex> copiaVertices = new ArrayList<>(vertices);
+        int count = 0;
+        while(copiaVertices.size() > 0){
+            ArrayList<Vertex> visitados = depthFirstSearch(copiaVertices.get(0));
+            for(Vertex v: visitados)
+                copiaVertices.remove(v);
+            count ++;
+        }
+        return count;
     }
-
+    
+    ///metodo dfs 
+    public ArrayList<Vertex> depthFirstSearch(Vertex v){
+        return depthFirstSearch(v,new ArrayList<Vertex>());
+    }
+    public ArrayList<Vertex> depthFirstSearch(Vertex v, ArrayList<Vertex> visited){
+        visited.add(v);
+        for(Vertex x: v.adjacentVertices){
+            if(!visited.contains(x))
+                depthFirstSearch(x, visited);
+        }
+        return visited;
+    }
     public boolean removeVertex(int vertex){
-        return false;
+        Vertex vFrom = null;
+        for(Vertex v: vertices){
+            if(v.data == vertex)
+            vFrom = v;
+        }
+        if(vFrom == null){
+            return false;
+        }
+        vertices.remove(vFrom);
+        for(Vertex v: vertices){
+            v.removeAdjacentVertex(vertex);
+        }
+        setNumVertices(vertices.size());
+        return true;
     }
 
     public static void main(String args[]) {
@@ -100,7 +133,14 @@ public class GraphAdjacentList implements Graph {
         graph.addEdge(2, 5);
         graph.addEdge(2, 3);
         graph.addEdge(3, 4);
-        graph.addEdge(4, 1);        
-        System.out.println(graph);
+        graph.addEdge(4, 1);
+        
+        graph.removeVertex(1);
+        graph.removeVertex(2);
+        graph.removeVertex(3);
+        System.out.println("#Vertices: " + graph.getNumVertices());
+        System.out.println("#Edges: " + graph.getNumEdges());
+        //int result = graph.countConnectedComponents();        
+        //System.out.println(result);
     }
 }
